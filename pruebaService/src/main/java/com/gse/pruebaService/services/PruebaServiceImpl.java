@@ -62,6 +62,7 @@ public class PruebaServiceImpl implements IPruebaService{
 
 	@Override
 	public boolean palabraPalindroma(String palabra, PruebaDTO prueba) {
+		System.out.println("Ingresando a verificar Palindormo");
 		palabra = palabra.toLowerCase();
 		palabra = palabra.replace(" ", "");
 		boolean bandera = true;
@@ -73,9 +74,6 @@ public class PruebaServiceImpl implements IPruebaService{
 				break;
 			}
 		}
-		
-		System.out.println(palabra);
-		System.out.println(palabra_invertida);
 		
 		prueba.setFecha_hora_prueba(obtenerFechaHora());
 		if(bandera == true) {
@@ -92,7 +90,7 @@ public class PruebaServiceImpl implements IPruebaService{
 
 	@Override
 	public List<Integer> serieFibonacci(int rango, PruebaDTO prueba) {
-		
+		System.out.println("Ingresando a serie Fibonacci");
 		List<Integer> listanumeros = new ArrayList<>();
 		int aux1 = 0;
 		int aux2 = 1;
@@ -127,7 +125,7 @@ public class PruebaServiceImpl implements IPruebaService{
 
 	@Override
 	public boolean parImpar(int numero, PruebaDTO prueba) {
-		
+		System.out.println("Ingresando a numero par o impar");
 		prueba.setFecha_hora_prueba(obtenerFechaHora());
 		String resultado = "";
 		boolean bandera = false;
@@ -147,6 +145,7 @@ public class PruebaServiceImpl implements IPruebaService{
 	
 	@Override
 	public String multiplosValor(int X, int rango, PruebaDTO prueba) {
+		System.out.println("Ingresando a multiplos de un numero");
 		List<Integer> multiplos = new ArrayList<>();
 		prueba.setFecha_hora_prueba(obtenerFechaHora());
 		int contador = 0;
@@ -173,7 +172,7 @@ public class PruebaServiceImpl implements IPruebaService{
 
 	@Override
 	public int facorial(int numero, PruebaDTO prueba) {
-		
+		System.out.println("Ingresando a factorial de un numero");
 		int resultado = 1;
 		
 		if(numero < 0) {
@@ -198,6 +197,7 @@ public class PruebaServiceImpl implements IPruebaService{
 	
 	@Override
 	public int factorialRecursivoService(int numero, PruebaDTO prueba) {
+		System.out.println("Ingresando a factorial de un numero con recursividad");
 		int resultado = factorialRecursivo(numero);
 		prueba.setFecha_hora_prueba(obtenerFechaHora());
 		prueba.setResultado(Integer.toString(resultado));
@@ -242,7 +242,6 @@ public class PruebaServiceImpl implements IPruebaService{
 		
 		for (int i = palabra.length() - 1; i >= 0; i--) {
 			palabra_invertida += palabra.charAt(i);
-			System.out.println(palabra.charAt(i));
 		}
 		
 		return palabra_invertida;
