@@ -2,6 +2,7 @@ package com.gse.pruebaService.services;
 
 import java.time.format.DateTimeFormatter;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,11 +33,6 @@ public class PruebaServiceImpl implements IPruebaService{
 		return pruebasDTO;
 	}
 
-	@Override
-	public PruebaDTO obtenerPorId(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public PruebaDTO save(PruebaDTO prueba) {
@@ -53,18 +49,208 @@ public class PruebaServiceImpl implements IPruebaService{
 
 	@Override
 	public boolean eliminar(Integer id) {
-		// TODO Auto-generated method stub
-		return false;
+		Optional<Prueba> optional= this.servicioAccesoBDPrueba.findById(id);
+		if (!optional.isPresent()) {
+			return false;
+		}else {
+			Prueba objPrueba = optional.get();
+			this.servicioAccesoBDPrueba.delete(objPrueba);
+			return true;
+		}
+
+	}
+
+	@Override
+	public boolean palabraPalindroma(String palabra, PruebaDTO prueba) {
+		palabra = palabra.toLowerCase();
+		palabra = palabra.replace(" ", "");
+		boolean bandera = true;
+		String palabra_invertida = invertirPalabra(palabra);
+		
+		for (int i = 0; i < palabra.length(); i++) {
+			if(palabra.charAt(i) != palabra_invertida.charAt(i)) {
+				bandera = false;
+				break;
+			}
+		}
+		
+		System.out.println(palabra);
+		System.out.println(palabra_invertida);
+		
+		prueba.setFecha_hora_prueba(obtenerFechaHora());
+		if(bandera == true) {
+			prueba.setResultado("Es una palabra palindorma");
+		}else {
+			prueba.setResultado("NO es una palabra palindorma");
+		}
+		
+		Prueba pruebaEntity = this.modelMapper.map(prueba, Prueba.class);
+		this.servicioAccesoBDPrueba.save(pruebaEntity);
+		
+		return bandera;
+	}
+
+	@Override
+	public List<Integer> serieFibonacci(int rango, PruebaDTO prueba) {
+		
+		List<Integer> listanumeros = new ArrayList<>();
+		int aux1 = 0;
+		int aux2 = 1;
+		int fibonacci = 1;
+		
+		for (int i = 0; i < rango; i++) {
+			
+			listanumeros.add(fibonacci);
+			System.out.println(fibonacci);
+			fibonacci = aux1 + aux2;
+			aux1 = aux2;
+			aux2 = fibonacci;	
+		}
+		
+		prueba.setFecha_hora_prueba(obtenerFechaHora());
+		String cadena = listaEnCadena(listanumeros);
+		
+		prueba.setResultado(cadena);
+		Prueba pruebaEntity = this.modelMapper.map(prueba, Prueba.class);
+		this.servicioAccesoBDPrueba.save(pruebaEntity);
+		
+		System.out.println(cadena);
+		
+		return listanumeros;
+	}
+
+	@Override
+	public boolean parImpar(int numero, PruebaDTO prueba) {
+		
+		prueba.setFecha_hora_prueba(obtenerFechaHora());
+		String resultado = "";
+		boolean bandera = false;
+		if(numero == 0) {
+			resultado = "El numero ingresado no puede ser 0";
+		}else if(numero % 2 == 0) {
+			resultado = "El numero ingresado es par";
+			bandera = true;
+		}else {
+			resultado = "El numero ingresado NO es par";
+		}
+		
+		prueba.setResultado(resultado);
+		Prueba pruebaEntity = this.modelMapper.map(prueba, Prueba.class);
+		this.servicioAccesoBDPrueba.save(pruebaEntity);
+		
+		return bandera;
 	}
 	
+	@Override
+	public String multiplosValor(int X, int rango, PruebaDTO prueba) {
+		List<Integer> multiplos = new ArrayList<>();
+		prueba.setFecha_hora_prueba(obtenerFechaHora());
+		int contador = 0;
+		String resultado = "";
+		if(X<=0 || rango <=0) {
+			resultado = "Los valores enviados deben ser mayor a cero";
+		}else {
+			for (int i = 0; i < rango; i++) {
+				if(i%X == 0) {
+					multiplos.add(i);
+					contador = contador + 1;
+				}
+			}
+			String cadena_numeros = listaEnCadena(multiplos);
+			resultado = resultado +"Numero de multiplos:" +Integer.toString(contador)+ " Lista de multiplos:" + cadena_numeros;
+		}
+		
+		
+		prueba.setResultado(resultado);
+		Prueba pruebaEntity = this.modelMapper.map(prueba, Prueba.class);
+		this.servicioAccesoBDPrueba.save(pruebaEntity);
+		return resultado;
+	}
+
+	@Override
+	public int facorial(int numero, PruebaDTO prueba) {
+		int resultado = 1;
+		prueba.setFecha_hora_prueba(obtenerFechaHora());
+		if(numero != 0) {		
+			for (int i = 1; i <= numero; i++) {
+				resultado = resultado * i;
+			}
+		}
+		
+		prueba.setResultado(Integer.toString(resultado));
+		Prueba pruebaEntity = this.modelMapper.map(prueba, Prueba.class);
+		this.servicioAccesoBDPrueba.save(pruebaEntity);
+		
+		return resultado;
+	}
+	
+	@Override
+	public int factorialRecursivoService(int numero, PruebaDTO prueba) {
+		int resultado = factorialRecursivo(numero);
+		prueba.setFecha_hora_prueba(obtenerFechaHora());
+		prueba.setResultado(Integer.toString(resultado));
+		Prueba pruebaEntity = this.modelMapper.map(prueba, Prueba.class);
+		this.servicioAccesoBDPrueba.save(pruebaEntity);
+				
+		return resultado;
+	}
+	
+	/**
+	 * Metodo recursivo para obtener el factorial de un numero
+	 * retorna el factorial de un numero 
+	 */
+	public int factorialRecursivo(int numero) {
+		if(numero == 0) {
+		    return 1;
+		}else{
+		    return numero *  factorialRecursivo(numero-1);   
+		}
+	}
+	
+	/**
+	 * Metodo para obtener la fecha y hora actual
+	 * Retorna una cadena con la fecha y hora actual 
+	 */
 	public String obtenerFechaHora() {
 		LocalDateTime fecha_hora = LocalDateTime.now();
-		System.out.println(fecha_hora);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		String formatDateTime = fecha_hora.format(formatter);
-		System.out.println(formatDateTime);
 		
 		return formatDateTime;
 	}
+	
+	/**
+	 * Metodo para invertir una frase o palabra
+	 * Retorna la cadena invertida
+	*/
+	public String invertirPalabra(String palabra) {
+		String palabra_invertida = "";
+		
+		for (int i = palabra.length() - 1; i >= 0; i--) {
+			palabra_invertida += palabra.charAt(i);
+			System.out.println(palabra.charAt(i));
+		}
+		
+		return palabra_invertida;
+	}
+	
+	/**
+	 * Metodo para convertir una lisa en una cadena
+	 * retorna una cadena con con numeros separados por comas 
+	 */
+	public String listaEnCadena(List<Integer> lista) {
+		String cadena = "";
+		
+		for (int j = 0; j < lista.size(); j++) {
+			if(j!= lista.size()-1) {
+				cadena = cadena + lista.get(j).toString() + "," ;
+			}else {
+				cadena = cadena + lista.get(j).toString();
+			}
+		}
+		
+		return cadena;
+	}
+
 	
 }

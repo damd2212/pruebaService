@@ -8,11 +8,18 @@ import com.gse.pruebaService.services.DTO.PruebaDTO;
 
 public interface IPruebaService {
 	public List<PruebaDTO> listar();
-	public PruebaDTO obtenerPorId(Integer id);
 	public PruebaDTO save(PruebaDTO prueba);
 	public boolean eliminar(Integer id);
 	
 	//Ejercicios de la prueba
 	
+	public boolean palabraPalindroma(String palabra, PruebaDTO prueba);
+	public List<Integer> serieFibonacci(int rango, PruebaDTO prueba);
+	public boolean parImpar(int numero, PruebaDTO prueba);
+	public String multiplosValor(int X, int rango, PruebaDTO prueba);
+	public int facorial(int numero, PruebaDTO prueba);
+	
+	//Metodo recursivo
+	public int factorialRecursivoService(int numero, PruebaDTO prueba);
 	
 }
