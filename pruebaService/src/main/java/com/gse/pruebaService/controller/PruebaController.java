@@ -3,6 +3,8 @@ package com.gse.pruebaService.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +18,7 @@ import com.gse.pruebaService.services.DTO.PruebaDTO;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:4200/")
 public class PruebaController {
 	
 	@Autowired
@@ -31,6 +34,12 @@ public class PruebaController {
 		PruebaDTO objPrueba = null;
 		objPrueba = pruebaService.save(prueba);
 		return objPrueba;
+	}
+	
+	@DeleteMapping("pruebas/{id}")
+	public boolean delete(@PathVariable Integer id) {
+		boolean resultado = pruebaService.eliminar(id);
+		return resultado;
 	}
 	
 	@PostMapping("/palindormo/{palabra}")

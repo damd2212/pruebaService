@@ -97,18 +97,24 @@ public class PruebaServiceImpl implements IPruebaService{
 		int aux1 = 0;
 		int aux2 = 1;
 		int fibonacci = 1;
+		String cadena = "";
 		
-		for (int i = 0; i < rango; i++) {
+		if(rango <= 0) {
+			cadena = "El rango ingresado debe ser mayor a 0";
+		}else {
+			for (int i = 0; i < rango; i++) {
+				
+				listanumeros.add(fibonacci);
+				System.out.println(fibonacci);
+				fibonacci = aux1 + aux2;
+				aux1 = aux2;
+				aux2 = fibonacci;	
+			}
 			
-			listanumeros.add(fibonacci);
-			System.out.println(fibonacci);
-			fibonacci = aux1 + aux2;
-			aux1 = aux2;
-			aux2 = fibonacci;	
+			cadena = listaEnCadena(listanumeros);
 		}
 		
 		prueba.setFecha_hora_prueba(obtenerFechaHora());
-		String cadena = listaEnCadena(listanumeros);
 		
 		prueba.setResultado(cadena);
 		Prueba pruebaEntity = this.modelMapper.map(prueba, Prueba.class);
@@ -125,9 +131,7 @@ public class PruebaServiceImpl implements IPruebaService{
 		prueba.setFecha_hora_prueba(obtenerFechaHora());
 		String resultado = "";
 		boolean bandera = false;
-		if(numero == 0) {
-			resultado = "El numero ingresado no puede ser 0";
-		}else if(numero % 2 == 0) {
+		if(numero % 2 == 0) {
 			resultado = "El numero ingresado es par";
 			bandera = true;
 		}else {
@@ -157,7 +161,7 @@ public class PruebaServiceImpl implements IPruebaService{
 				}
 			}
 			String cadena_numeros = listaEnCadena(multiplos);
-			resultado = resultado +"Numero de multiplos:" +Integer.toString(contador)+ " Lista de multiplos:" + cadena_numeros;
+			resultado = resultado +"Numero de multiplos: " +Integer.toString(contador)+ "    Lista de multiplos: " + cadena_numeros;
 		}
 		
 		
@@ -169,15 +173,23 @@ public class PruebaServiceImpl implements IPruebaService{
 
 	@Override
 	public int facorial(int numero, PruebaDTO prueba) {
+		
 		int resultado = 1;
-		prueba.setFecha_hora_prueba(obtenerFechaHora());
-		if(numero != 0) {		
-			for (int i = 1; i <= numero; i++) {
-				resultado = resultado * i;
+		
+		if(numero < 0) {
+			resultado = -1;
+			prueba.setResultado("No se puede calcular el factorial de un numero negativo");
+		}else {
+			if(numero != 0) {		
+				for (int i = 1; i <= numero; i++) {
+					resultado = resultado * i;
+				}
 			}
+			prueba.setResultado(Integer.toString(resultado));
 		}
 		
-		prueba.setResultado(Integer.toString(resultado));
+		prueba.setFecha_hora_prueba(obtenerFechaHora());
+		
 		Prueba pruebaEntity = this.modelMapper.map(prueba, Prueba.class);
 		this.servicioAccesoBDPrueba.save(pruebaEntity);
 		
@@ -200,7 +212,9 @@ public class PruebaServiceImpl implements IPruebaService{
 	 * retorna el factorial de un numero 
 	 */
 	public int factorialRecursivo(int numero) {
-		if(numero == 0) {
+		if(numero < 0) {
+			return -1;
+		}else if(numero == 0) {
 		    return 1;
 		}else{
 		    return numero *  factorialRecursivo(numero-1);   
